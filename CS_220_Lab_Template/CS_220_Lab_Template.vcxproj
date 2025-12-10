@@ -128,8 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CS_220_Lab_Template.cpp" />
+    <ClCompile Include="menu_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="menu_functions.h" />
     <ClInclude Include="sqlite3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
