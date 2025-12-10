@@ -62,8 +62,6 @@ void importData(sqlite3* DB)
 	int exit = 0;
 	char* errorMessage;
 
-	int recordNum; //to track the current record when reading the files; reset to zero before reading a file
-
 	std::ifstream itemIndex;
 
 	//vectors to hold data from each field
@@ -72,7 +70,6 @@ void importData(sqlite3* DB)
 	std::vector<std::string> itemDescriptions;
 
 	itemIndex.open("item_index.csv");
-	recordNum = 0;
 	while (!itemIndex.eof())
 	{
 		//temporary holder strings for each value
@@ -87,13 +84,11 @@ void importData(sqlite3* DB)
 			break;
 		}
 		//this line below crashes the program for some reason, something to do with the vector. Adding 1 to the index doesn't help, everything looks fine when debugging.
-		itemIDs[recordNum] = itemIDString;
+		itemIDs.push_back(itemIDString);
 		std::getline(itemIndex, itemNameString, ',');
-		itemNames[recordNum] = itemNameString;
+		itemNames.push_back(itemNameString);
 		std::getline(itemIndex, itemDescriptionString, '\n');
-		itemDescriptions[recordNum] = itemDescriptionString;
-
-		recordNum++;
+		itemDescriptions.push_back(itemDescriptionString);
 	}
 	itemIndex.close();
 
@@ -108,11 +103,8 @@ void importData(sqlite3* DB)
 			std::cerr << "Error Importing Item_Index" << std::endl;
 			sqlite3_free(errorMessage);
 		}
-		else
-		{
-			std::cout << "Item Index imported successfully!\n";
-		}
 	}
+	std::cout << "Item Index imported successfully!\n";
 
 	std::ifstream inventory;
 
@@ -120,8 +112,7 @@ void importData(sqlite3* DB)
 	std::vector<std::string> equippedFlags;
 
 	inventory.open("inventory.csv");
-	recordNum = 0;
-	while (!itemIndex.eof())
+	while (!inventory.eof())
 	{
 		//temporary holder strings for each value
 		std::string inventoryItemsString;
@@ -132,11 +123,9 @@ void importData(sqlite3* DB)
 		{
 			break;
 		}
-		inventoryItems[recordNum] = inventoryItemsString;
+		inventoryItems.push_back(inventoryItemsString);
 		std::getline(inventory, equippedFlagsString, '\n');
-		equippedFlags[recordNum] = equippedFlagsString;
-
-		recordNum++;
+		equippedFlags.push_back(equippedFlagsString);
 	}
 	inventory.close();
 
@@ -150,11 +139,8 @@ void importData(sqlite3* DB)
 			std::cerr << "Error Importing Inventory" << std::endl;
 			sqlite3_free(errorMessage);
 		}
-		else
-		{
-			std::cout << "Inventory imported successfully!\n";
-		}
 	}
+	std::cout << "Inventory imported successfully!\n";
 
 	std::ifstream stats;
 
@@ -165,8 +151,7 @@ void importData(sqlite3* DB)
 	std::vector<std::string> speeds;
 
 	stats.open("stats.csv");
-	recordNum = 0;
-	while (!itemIndex.eof())
+	while (!stats.eof())
 	{
 		//temporary holder strings for each value
 		std::string creatureIDString;
@@ -180,17 +165,15 @@ void importData(sqlite3* DB)
 		{
 			break;
 		}
-		creatureIDs[recordNum] = creatureIDString;
+		creatureIDs.push_back(creatureIDString);
 		std::getline(stats, hitPointsString, ',');
-		hitPoints[recordNum] = hitPointsString;
+		hitPoints.push_back(hitPointsString);
 		std::getline(stats, attackString, ',');
-		attacks[recordNum] = attackString;
+		attacks.push_back(attackString);
 		std::getline(stats, defenseString, ',');
-		defenses[recordNum] = defenseString;
+		defenses.push_back(defenseString);
 		std::getline(stats, speedString, '\n');
-		speeds[recordNum] =speedString;
-
-		recordNum++;
+		speeds.push_back(speedString);
 	}
 	stats.close();
 
@@ -204,11 +187,8 @@ void importData(sqlite3* DB)
 			std::cerr << "Error Importing Stats" << std::endl;
 			sqlite3_free(errorMessage);
 		}
-		else
-		{
-			std::cout << "Stats imported successfully!\n";
-		}
 	}
+	std::cout << "Stats imported successfully!\n";
 
 	std::ifstream character;
 
@@ -220,8 +200,7 @@ void importData(sqlite3* DB)
 	std::vector<std::string> characterStats;
 
 	character.open("character.csv");
-	recordNum = 0;
-	while (!itemIndex.eof())
+	while (!character.eof())
 	{
 		//temporary holder strings for each value
 		std::string nameString;
@@ -236,19 +215,17 @@ void importData(sqlite3* DB)
 		{
 			break;
 		}
-		characterNames[recordNum] = nameString;
+		characterNames.push_back(nameString);
 		std::getline(character, levelString, ',');
-		characterLevels[recordNum] = levelString;
+		characterLevels.push_back(levelString);
 		std::getline(character, classString, ',');
-		characterClasses[recordNum] = classString;
+		characterClasses.push_back(classString);
 		std::getline(character, activeString, ',');
-		characterActiveFlags[recordNum] = activeString;
+		characterActiveFlags.push_back(activeString);
 		std::getline(character, equipmentString, ',');
-		characterEquipments[recordNum] = equipmentString;
+		characterEquipments.push_back(equipmentString);
 		std::getline(character, statsString, '\n');
-		characterStats[recordNum] = statsString;
-
-		recordNum++;
+		characterStats.push_back(statsString);
 	}
 	character.close();
 
@@ -262,11 +239,8 @@ void importData(sqlite3* DB)
 			std::cerr << "Error Importing Character" << std::endl;
 			sqlite3_free(errorMessage);
 		}
-		else
-		{
-			std::cout << "Character imported successfully!\n";
-		}
 	}
+	std::cout << "Character imported successfully!\n";
 }
 
 //menu option 3: simple select
